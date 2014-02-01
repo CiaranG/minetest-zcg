@@ -98,6 +98,25 @@ zcg.load_all = function()
 	print("All crafts loaded !")
 end
 
+minetest.register_chatcommand("search_items", {
+    params = "<text>",
+    description = "search all craft items",
+    privs = {},
+    func = function(name, param)
+	if zcg.need_load_all then zcg.load_all() end
+        local found = false
+	for _, itemname in ipairs(zcg.itemlist) do
+            if itemname:find(param, 1, true) then
+                minetest.chat_send_player(name, itemname)
+                found = true
+            end
+        end
+        if not found then
+            minetest.chat_send_player(name, "No matching items.")
+        end
+    end
+})
+
 zcg.formspec = function(pn)
 	if zcg.need_load_all then zcg.load_all() end
 	page = zcg.users[pn].page
